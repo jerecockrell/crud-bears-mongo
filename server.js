@@ -25,7 +25,7 @@ router.get('/', function(req, res) {
 
 
 
-router.route('/bears').post(function(req, res){
+router.route('/bears').post(function(req, res) {
 
 		var bear = new Bear();
 		
@@ -43,14 +43,16 @@ router.route('/bears').post(function(req, res){
 
 	})
 	.get(function(req, res){
-
-		res.json({title: "I am trying to GET"})
-
+		Bear.find(function(err, bears){
+			if(err){
+				console.log(err)
+			} else {
+				res.json(bears)
+			}
+		})
 	});
-	
 
 
-router.get('/bear')
 app.use('/api', router);
 app.listen(port, function(){
 	console.log("app listening on port " + port)
