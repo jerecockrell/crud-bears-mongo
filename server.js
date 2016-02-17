@@ -5,10 +5,38 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/animals');
 
+var bearRouter = require('./routes/bears');                                                                                                            
+
 var Bear = require('./models/bear');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(express.static('public'));
+
+app.set('view engine', 'ejs');
+
+app.get('/', function(req, res){
+	res.render('index')
+});
+
+app.get('/bears', function(req, res){
+	Bear.find(function(err, bears){
+		if(err){
+		  console.log(err)
+		} else {
+		  res.render('bears', { bears: bears })
+		}
+	})
+});
+
+app.get('/about', function(req, res){
+	var data = {};
+	data.title = 'about page';
+	data.name = 'Jere';
+	data.time = new Date();
+	res.render('about', data);
+});
 
 var port = process.env.PORT || 8080;
 
@@ -24,75 +52,7 @@ router.get('/', function(req, res) {
 });
 
 
-
-router.route('/bears').post(function(req, res) {
-
-		var bear = new Bear();
-		
-		bear.name = req.body.name;
-		bear.age = req.body.age;
-		bear.gender = req.body.gender;
-		
-		bear.save(function(err, bear){
-			if(err){
-				console.log(err)//do something
-			} else {
-				res.json(bear)//do something
-			}
-		})
-
-	})
-	.get(function(req, res){
-		Bear.find(function(err, bears){
-			if(err){
-				console.log(err)
-			} else {
-				res.json(bears)
-			}
-		})
-	});
-
-router.route('/bears/:bear_id')
-	.get(function(req, res){
-		Bear.findById(req.params.bear_id, function(err, bear){
-			if(err){
-				console.log(err)
-			} else {
-				res.json(bear)
-			}
-		})
-	})
-	.put(function(req, res){
-		Bear.findById(req.params.bear_id, function(err, bear){
-			if(err){
-				console.log(err)
-			} else {
-
-				bear.name = req.body.name ? req.body.name: bear.name;
-				bear.age = req.body.age ? req.body.age: bear.age;
-				bear.gender = req.body.gender ? req.body.gender: bear.gender;
-
-				bear.save(function(err){
-					if(err){
-						console.log(err)
-					} else {
-						res.json({ title: 'bear updated' })
-					}
-			    })
-		    }
-		})
- 	})
- 	.delete(function(req, res){
- 		Bear.remove({_id: req.params.bear_id}, function(err, bear){
- 			if(err){
- 				console.log(err)
- 			} else {
- 				res.json({title: 'bear was successfully deleted!'})
- 			}
- 		})
- 	});
-
-app.use('/api', router);
+app.use('/api', bearRouter);
 app.listen(port, function(){
 	console.log("app listening on port " + port)
 })
