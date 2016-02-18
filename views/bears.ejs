@@ -12,8 +12,8 @@
   <body class="container">
   	<div class="jumbotron">
   		<div class="container">
-			<h3>My Bears</h3>
-		</div>
+		<h3>My Bears</h3>
+			</div>
 			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
@@ -22,29 +22,29 @@
 				</thead>
 				<tbody>
 					<% for(var i = 0; i < bears.length; i++) { %>
-						<tr>
-						<td><%= bears[i].name %></td>
-						<td><%= bears[i].age %></td>
-						<td><%= bears[i].gender %></td>
-						<td><button type="button" class="btn btn-danger deleteBear">delete</button></td>
+						<tr id="<%= bears[i]._id %>">
+							<td><%= bears[i].name %></td>
+						    <td><%= bears[i].age %></td>
+							<td><%= bears[i].gender %></td>
+							<td><button type="button" class="btn btn-danger deleteBear">delete</button></td>
 						</tr>
 					<% }; %>
 				</tbody>
 			</table>
-			<div class="container">
+		<div class="container">
 			<form action="/api/bears" method="POST" class="form-inline" role="form">
 			
 				<div class="form-group">
 					<label class="sr-only" for="">label</label>
-					<input name="name" type="text" class="form-control" id="" placeholder="name">
+					<input required name="name" type="text" class="form-control" id="" placeholder="name">
 				</div>
 				<div class="form-group">
 					<label class="sr-only" for="">label</label>
-					<input name="age" type="text" class="form-control" id="" placeholder="age">
+					<input required name="age" type="text" class="form-control" id="" placeholder="age">
 				</div>
 				<div class="form-group">
 					<label class="sr-only" for="">label</label>
-					<input name="gender" type="text" class="form-control" id="" placeholder="gender">
+					<input required name="gender" type="text" class="form-control" id="" placeholder="gender">
 				</div>
 
 				<button type="submit" class="btn btn-primary">Submit</button>
