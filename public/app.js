@@ -1,4 +1,5 @@
 var deleteBear = function() {
+	event.preventDefault();
 	
 	var id = $(event.target).closest('tr').attr('id');
 	var bear = $(event.target).closest('tr');
@@ -15,13 +16,43 @@ var deleteBear = function() {
 }
 
 $('.deleteBear').on('click', deleteBear);
-event.preventDefault();
 
-var addBear = function(){
+
+var addBear = function(event){
+	event.preventDefault();
+
 	var name = $('#name').val();
 	var age = $('#age').val();
 	var gender = $('#gender').val();
-	alert(name)
+	var $table = $('#bearTable');
+
+	var bear = {};
+	bear.name = name;
+	bear.age = Number(age);
+	bear.gender = gender;
+
+	if (!bear.age){
+		alert('Please enter a numeric age for bear');
+		return;
+	}
+
+	$.ajax({
+		url: '/api/bears',
+		method: 'POST',
+		data: bear
+	}).done(function(data){
+		console.log('I posted a bear!', data)
+
+		$table.append('<tr id=' + data._id + '> \
+					  <td>' + data.name + '</td> \
+					  <td>' + data.age + '</td>	  \
+					  <td>' + data.gender + '</td>  \
+					  <td><button class="btn btn-danger deleteBear">delete</button></td> \
+					  </tr>'
+					  );
+		$('.deleteBear').off('click').on('click', deleteBear);
+	});
 }
 
-$('.addBear').on('click', addBear);
+
+$('#addBear').on('click', addBear);
